@@ -10,12 +10,11 @@ import {
   ENV_MAIN,
   DEFAULT_MAIN_ID,
 } from './constants';
-import { IIPCListener, IIPCMain } from '../types/preloads/ipc';
+import { IIPCListener, IIPCMain } from '../types/ipc';
 
 export default class IPCMain extends IPCBase implements IIPCMain {
   env = ENV_MAIN;
   currentId = DEFAULT_MAIN_ID;
-  // 预留，目前考虑渲染进程-主进程场景，使用 ipcMain.handle
   requestCallbackPool: Map<string, IIPCListener> = new Map();
 
   constructor() {
