@@ -2,7 +2,6 @@
   "name": "easier-electron-ipc",
   "version": "1.0.0",
   "description": "Make electron-ipc communication easier.",
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
