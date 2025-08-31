@@ -1,6 +1,6 @@
 {
   "name": "easier-electron-ipc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Make electron-ipc communication easier.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
