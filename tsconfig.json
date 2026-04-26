@@ -13,16 +13,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declarationMap": false,
+    "sourceMap": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
-    "noUncheckedIndexedAccess": false,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]

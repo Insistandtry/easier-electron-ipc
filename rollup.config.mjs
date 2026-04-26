@@ -1,17 +1,14 @@
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
 import { readFileSync } from 'fs';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),
-  ...Object.keys(pkg.peerDependencies || {}),
-  'electron',
-  'events',
-  'path',
-  'fs'
+  ...Object.keys(pkg.peerDependencies || {})
 ];
 
 const commonConfig = {
@@ -25,9 +22,10 @@ const commonConfig = {
     typescript({
       tsconfig: './tsconfig.json',
       declaration: true,
-      declarationMap: true,
+      declarationMap: false,
       outDir: 'dist',
     }),
+    terser(),
   ],
 };
 
@@ -39,7 +37,7 @@ export default [
       file: pkg.main,
       format: 'cjs',
       exports: 'named',
-      sourcemap: true,
+      sourcemap: false,
     },
   },
   // ES modules build
@@ -48,7 +46,7 @@ export default [
     output: {
       file: pkg.module || 'dist/index.esm.js',
       format: 'es',
-      sourcemap: true,
+      sourcemap: false,
     },
   },
 ];
