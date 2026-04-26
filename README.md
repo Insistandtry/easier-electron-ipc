@@ -1,48 +1,48 @@
 # Easier Electron IPC
 
-**中文** | [English](README.en.md)
+**English** | [中文](README.zh.md)
 
-使Electron IPC通信更加简单的TypeScript库。
+A TypeScript library that makes Electron IPC communication easier.
 
-### 支持通信场景
+### Supported Communication Scenarios
 
-- 主进程内
-- 主进程与渲染进程
-- 渲染进程之间
-- 渲染进程内
+- Within main process
+- Between main process and renderer process
+- Between renderer processes
+- Within renderer process
 
-### 简洁的 API
+### Simple APIs
 
 - send & on
 - request & response
 
-### API 方法说明
+### API Methods Description
 
-| 方法                                         | 类型     | 描述                                           | 使用场景                   |
-| -------------------------------------------- | -------- | ---------------------------------------------- | -------------------------- |
-| `send(channel, data, options: ISendOptions)` | 发送     | 发送消息到指定频道                             | 单向通信，不需要返回值     |
-| `on(channel, callback)`                      | 监听     | 监听指定频道的消息                             | 接收来自其他进程的消息     |
-| `request(channel, data, options)`            | 请求     | 发送请求并等待响应                             | 双向通信，需要返回值       |
-| `response(channel, callback)`                | 响应     | 响应来自指定频道的请求，默认超时时间是 15000ms | 处理请求并返回结果         |
-| `once(channel, callback, options)`           | 发送     | 单次监听指定频道的消息                         | 单次单向通信，不需要返回值 |
-| `off(channel, callback)`                     | 取消监听 | 取消对指定频道的监听                           | 清理事件监听器             |
+| Method                                       | Type     | Description                                                            | Use Case                                        |
+| -------------------------------------------- | -------- | ---------------------------------------------------------------------- | ----------------------------------------------- |
+| `send(channel, data, options: ISendOptions)` | Send     | Send message to specified channel                                      | One-way communication, no return value          |
+| `on(channel, callback)`                      | Listen   | Listen to messages on specified channel                                | Receive messages from other processes           |
+| `request(channel, data, options)`            | Request  | Send request and wait for response                                     | Two-way communication, needs return value       |
+| `response(channel, callback)`                | Response | Respond to requests from specified channel, default timeout is 15000ms | Handle requests and return results              |
+| `once(channel, callback, options)`           | Send     | Listen to specified channel message once                               | One-time one-way communication, no return value |
+| `off(channel, callback)`                     | Unlisten | Cancel listening to specified channel                                  | Clean up event listeners                        |
 
-### 类型
+### Types
 
 ```typescript
 export interface ISendOptions {
-  /** 定向通信的目标窗口 ID，定义主窗口是 -1 */
+  /** Target window IDs for directed communication, main window is -1 */
   targetIds?: number[];
   mode?: ESendMode;
 }
 
 /**
- * 发送模式：
- * IPC：默认，进程间通信，主进程与渲染进程、渲染进程之间
- * Event：仅事件模式，同渲染进程内的事件分发
- * Both：同时支持 ipc 与事件模式
- * OnlyMain：进程间通信，仅发送到主进程，当 OnlyMain 时，则不再使用 targetIds
- * OnlyClient：进程间通信，仅发送到渲染进程
+ * Send modes:
+ * IPC: Default, inter-process communication between main and renderer processes
+ * Event: Event mode only, event distribution within same renderer process
+ * Both: Support both IPC and event mode
+ * OnlyMain: Inter-process communication, send to main process only, targetIds ignored when OnlyMain
+ * OnlyClient: Inter-process communication, send to renderer process only
  */
 export enum ESendMode {
   IPC = 'IPC',
@@ -53,16 +53,16 @@ export enum ESendMode {
 }
 ```
 
-## 安装
+## Installation
 
 ```bash
 npm install easier-electron-ipc
 ```
 
-## 使用
+## Usage
 
 ```typescript
-// 主进程 在主进程代码入口初始化即可
+// Main process - Initialize at the entry point of main process code
 import { IPCMain } from 'easier-electron-ipc';
 global.ipcMain = new IPCMain();
 
@@ -73,7 +73,7 @@ global.ipcMain.response('GET_SYSTEM_INFO', (data, options) => {
   return 'ok';
 });
 
-// preload 中初始化
+// Initialize in preload
 import { IPCClient } from 'easier-electron-ipc';
 const ipcClient = new IPCClient();
 
@@ -81,14 +81,14 @@ window.electron = {
   ipc: ipcClient,
   api: {
     system: {
-      closeSetting: (,data, options) => ipcClient.send('CLOSE_SETTING', data, options)
+      closeSetting: (data, options) => ipcClient.send('CLOSE_SETTING', data, options)
       getSystemInfo: (data, options) =>
         ipcClient.request('GET_SYSTEM_INFO', data, options),
     },
   },
 };
 
-// renderer 中使用
+// Use in renderer
 
 window.electron.api.system.closeSetting({ time: Date.now() }, { mode: 'OnlyMain' })
 
@@ -99,29 +99,29 @@ window.electron.api.system.getSystemInfo(
 
 ```
 
-### 其他使用场景
+### Other Use Cases
 
-#### 相同的 channel，流式操作：先触发主进程，再触发其他渲染进程（多标签的关闭存在此场景）
+#### Same channel, streaming operations: trigger main process first, then other renderer processes (this scenario exists when closing multiple tabs)
 
 ```typescript
-// A 渲染进程监听 channelA
+// Renderer process A listens to channelA
 window.electron.ipc.on('channelA', () => {});
-// 主进程监听 channelA
+// Main process listens to channelA
 global.enow.ipcMain.on('channelA', () => {});
 
-// 发送：
-// 渲染进程 B
-window.electron.ipc.send('channelA', data, { mode: 'OnlyMain' }); // 主进程响应
-window.electron.ipc.send('channelA', data, { mode: 'OnlyRender' }); // 包括 A 渲染进程在内的其他渲染响应
+// Send:
+// Renderer process B
+window.electron.ipc.send('channelA', data, { mode: 'OnlyMain' }); // Main process responds
+window.electron.ipc.send('channelA', data, { mode: 'OnlyRender' }); // Other renderers including A respond
 ```
 
-#### 同渲染进程中使用 send-on，当事件使用
+#### Using send-on within same renderer process as events
 
 ```typescript
-// A 渲染进程中
+// In renderer process A
 window.electron.ipc.on('channelA', () => {});
 
-// 某个时刻调用
-window.electron.ipc.send('channelA', data); // A 渲染进程(自己)不会响应
-window.electron.ipc.send('channelA', data, { mode: 'Event' }); // 当第三个参数中 mode 设置为 Event、Both时，A 渲染进程(自己)会响应
+// Called at some point
+window.electron.ipc.send('channelA', data); // Renderer process A (itself) won't respond
+window.electron.ipc.send('channelA', data, { mode: 'Event' }); // When mode is set to Event or Both in third parameter, renderer process A (itself) will respond
 ```

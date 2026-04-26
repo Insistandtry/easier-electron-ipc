@@ -1,17 +1,18 @@
 {
   "name": "easier-electron-ipc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Make electron-ipc communication easier.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "README.zh.md"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "build:watch": "rollup -c --watch",
+    "build": "npx rollup -c",
+    "build:watch": "npx rollup -c --watch",
     "clean": "rimraf dist",
     "dev": "npm run clean && npm run build:watch",
     "prepublishOnly": "npm run clean && npm run build",

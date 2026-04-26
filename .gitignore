@@ -10,6 +10,9 @@ dist/
 build/
 *.tsbuildinfo
 
+# agent
+.trae/
+
 # Runtime data
 pids
 *.pid

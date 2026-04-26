@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easier Electron IPC Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .input-section {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      flex: 1;
+    }
+    #send-to-main {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #send-to-other {
+      background-color: #2196F3;
+      color: white;
+    }
+    #send-request {
+      background-color: #ff9800;
+      color: white;
+    }
+    .messages-section {
+      margin-top: 20px;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    #messages {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .message h3 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      color: #555;
+      font-size: 14px;
+    }
+    .message pre {
+      margin: 0;
+      font-size: 12px;
+      color: #333;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Easier Electron IPC Demo</h1>
+  <div class="container">
+    <div class="input-section">
+      <input type="text" id="message-input" placeholder="输入消息...">
+      <div class="button-group">
+        <button id="send-to-main">发送到主进程</button>
+        <button id="send-to-other">发送到其他渲染进程</button>
+        <button id="send-request">发送请求到主进程</button>
+      </div>
+    </div>
+    <div class="messages-section">
+      <h2>消息记录</h2>
+      <div id="messages"></div>
+    </div>
+  </div>
+</body>
+</html>
